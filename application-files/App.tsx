@@ -13,6 +13,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import {
   Button,
+  Image,
   StyleSheet,
   Text,
   View,
@@ -68,7 +69,9 @@ function CameraScreen({navigation}) {
       const data = await takePicture();
       console.log(data.uri);
       postRequest(data.uri);
-      navigation.replace('InfoScreen');
+      navigation.replace('InfoScreen', {
+        imageUri: data.uri,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -89,15 +92,25 @@ function CameraScreen({navigation}) {
   )
 }
 
-function InfoScreen({navigation}) {
+function InfoScreen({route, navigation}) {
+  const imageUri: string = route.params.imageUri;
   const onPressHomeHandler = () => {
     navigation.navigate('HomeScreen');
   }
   const onPressCameraHandler = () => {
     navigation.navigate('CameraScreen');
   }
+  console.log(imageUri);
   return (
     <SafeAreaView style={styles.info} edges={['left', 'right', 'bottom']}>
+      <Text style={styles.text}>
+        Insert name of guessed person here
+      </Text>
+      <Image 
+        // source={require('./patrick.jpg')}
+        source={{uri: route.params.imageUri}}
+        style={{width: 300, height: 300}}
+      />
       <Text style={styles.text}>
         Placeholder for relevant links
       </Text>
